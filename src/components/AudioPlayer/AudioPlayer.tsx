@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef } from 'react';
 
 interface AudioPlayerProps {
   audioRef: React.RefObject<HTMLAudioElement | null>;
@@ -19,9 +19,9 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
   };
 
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!progressRef.current) return;
+    if (!progressRef.current || duration <= 0) return;
     const rect = progressRef.current.getBoundingClientRect();
-    const percent = (e.clientX - rect.left) / rect.width;
+    const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
     onSeek(percent * duration);
   };
 
@@ -29,11 +29,10 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
 
   return (
     <div className="bg-gray-800 rounded-xl p-4">
-      <audio ref={audioRef} className="hidden" />
       <div className="flex items-center gap-4">
         <button
           onClick={onToggle}
-          className="w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 rounded-full transition-colors"
+          className="w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 rounded-full transition-colors flex-shrink-0"
         >
           {isPlaying ? (
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -46,7 +45,7 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
             </svg>
           )}
         </button>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div
             ref={progressRef}
             onClick={handleProgressClick}
