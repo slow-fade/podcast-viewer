@@ -4,6 +4,7 @@ const GROQ_API_URL = 'https://api.groq.com/openai/v1/audio/transcriptions';
 
 export async function transcribeAudio(
   file: File,
+  language: string = 'tr',
   onProgress?: (progress: number) => void
 ): Promise<GroqTranscriptResponse> {
   const apiKey = localStorage.getItem('groq_api_key');
@@ -15,7 +16,7 @@ export async function transcribeAudio(
   formData.append('model', 'whisper-large-v3-turbo');
   formData.append('file', file);
   formData.append('temperature', '0');
-  formData.append('language', 'tr');
+  formData.append('language', language);
   formData.append('response_format', 'verbose_json');
   formData.append('timestamp_granularities[]', 'word');
 

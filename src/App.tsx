@@ -3,6 +3,7 @@ import { ApiKeyModal } from '@/components/ApiKeyModal';
 import { FileUpload } from '@/components/FileUpload';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { TranscriptView } from '@/components/TranscriptView';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import { ApiKeyProvider, useApiKeyContext } from '@/context';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTranscript } from '@/hooks/useTranscript';
@@ -18,6 +19,7 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [useDummy, setUseDummy] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState('tr');
 
   const { activeLineIndex } = useTranscript(currentTime, lines);
 
@@ -33,7 +35,7 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
       if (useDummy) {
         result = dummyTranscript as unknown as GroqTranscriptResponse;
       } else {
-        result = await transcribeAudio(file);
+        result = await transcribeAudio(file, selectedLanguage);
       }
       setTranscript(result);
 
@@ -44,7 +46,7 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
     } finally {
       setIsTranscribing(false);
     }
-  }, [loadAudio, useDummy]);
+  }, [loadAudio, useDummy, selectedLanguage]);
 
   const handleReset = useCallback(() => {
     setTranscript(null);
@@ -85,6 +87,11 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
               <h2 className="text-3xl md:text-4xl font-bold text-tokyo-text-primary">Upload Your Podcast</h2>
               <p className="text-tokyo-text-muted text-lg">Transcribe and play with synchronized lyrics</p>
             </div>
+            <LanguageSelector
+              selectedLanguage={selectedLanguage}
+              onLanguageChange={setSelectedLanguage}
+              disabled={isTranscribing}
+            />
             <FileUpload onFileSelected={handleFileSelected} isLoading={isTranscribing} />
             {error && (
               <div className="w-full max-w-lg bg-tokyo-accent-red/10 border border-tokyo-accent-red/30 text-tokyo-accent-red px-5 py-4 rounded-xl text-center text-sm">

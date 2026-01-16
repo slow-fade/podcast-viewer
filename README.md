@@ -5,11 +5,12 @@ A static, pure frontend webapp for transcribing and playing podcast episodes wit
 ## Features
 
 - **Audio Upload**: Support for m4a, mp3, and mp4 podcast episode files
+- **Language Selection**: Choose transcription language (Turkish, English, French, German, Spanish, Russian)
 - **API Key Management**: Enter and store Groq API key in browser localStorage
 - **AI Transcription**: Uses Groq's hosted API with Whisper v3 for accurate speech-to-text
 - **Playback Controls**: Full audio controls including play, pause, and seek functionality
 - **Synchronized Lyrics View**: Karaoke-style text display that:
-  - Joins transcript text into single line, splits into chunks of 7-8 words
+  - Joins transcript text into single line, splits into chunks of 10 words
   - Keeps punctuation attached to preceding word
   - Highlights the currently playing line at center screen
   - Dims inactive lines for focus
@@ -75,6 +76,7 @@ src/
 │   ├── AudioPlayer/       # Playback controls and audio management
 │   ├── TranscriptView/    # Karaoke-style text display with smooth scrolling
 │   ├── FileUpload/        # Drag-and-drop audio upload zone
+│   ├── LanguageSelector/  # Dropdown to select transcription language
 │   └── ApiKeyModal/       # Modal for entering/resetting API key
 ├── context/
 │   └── ApiKeyContext.tsx  # localStorage API key state management
@@ -114,7 +116,7 @@ curl "https://api.groq.com/openai/v1/audio/transcriptions" \
 
 **Configuration**:
 - **Model**: `whisper-large-v3-turbo`
-- **Language**: `tr` (Turkish) - configurable
+- **Language**: Configurable via UI (Turkish, English, French, German, Spanish, Russian)
 - **Temperature**: `0` (deterministic output)
 - **Response Format**: `verbose_json` (includes word-level timestamps)
 - **Timestamp Granularities**: `word` (for precise transcript syncing)
@@ -143,17 +145,18 @@ The transcript processing pipeline:
 
 1. **Join**: Replace newlines with spaces, join all text into single line
 2. **Split**: Split by spaces to get words array (punctuation stays with preceding word)
-3. **Chunk**: Group words into lines of 7-8 words each
+3. **Chunk**: Group words into lines of 10 words each
 4. **Sync**: Each line inherits start/end from first/last word
 
 ## Usage
 
 1. Open the webapp in your browser
 2. Enter your Groq API key when prompted (or use the API Key button in header)
-3. Drag and drop an m4a, mp3, or mp4 file, or click to browse
-4. Wait for the transcription to complete (usually a few seconds)
-5. Use the playback controls to play, pause, and seek through the audio
-6. Watch the synchronized transcript scroll smoothly as you listen
+3. Select your desired transcription language from the dropdown
+4. Drag and drop an m4a, mp3, or mp4 file, or click to browse
+5. Wait for the transcription to complete (usually a few seconds)
+6. Use the playback controls to play, pause, and seek through the audio
+7. Watch the synchronized transcript scroll smoothly as you listen
 
 ## Contributing
 
