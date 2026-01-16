@@ -26,7 +26,7 @@ export function TranscriptView({ lines, activeLineIndex }: TranscriptViewProps) 
   return (
     <div
       ref={containerRef}
-      className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl p-6 max-w-3xl mx-auto h-80 overflow-y-auto scroll-smooth"
+      className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl p-6 max-w-3xl mx-auto max-h-[60vh] overflow-y-auto scroll-smooth"
     >
       <div className="space-y-3">
         {lines.map((line, index) => {

@@ -1,6 +1,6 @@
 import type { Word, TranscriptLine } from '@/types';
 
-export function splitTranscriptIntoLines(words: Word[], wordsPerLine: number = 7): TranscriptLine[] {
+export function splitTranscriptIntoLines(words: Word[], wordsPerLine: number = 10): TranscriptLine[] {
   const lines: TranscriptLine[] = [];
 
   for (let i = 0; i < words.length; i += wordsPerLine) {
