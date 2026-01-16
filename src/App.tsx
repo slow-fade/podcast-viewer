@@ -11,7 +11,7 @@ import { splitTranscriptIntoLines } from '@/utils';
 import dummyTranscript from '@/services/dummy-transcript.json';
 import type { TranscriptLine, GroqTranscriptResponse } from '@/types';
 
-function AppContent() {
+function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
   const { audioRef, isPlaying, currentTime, duration, loadAudio, toggle, seek } = useAudioPlayer();
   const [transcript, setTranscript] = useState<GroqTranscriptResponse | null>(null);
   const [lines, setLines] = useState<TranscriptLine[]>([]);
@@ -53,7 +53,7 @@ function AppContent() {
   }, []);
 
   return (
-    <>
+    <div>
       <header className="fixed top-0 left-0 right-0 z-40 bg-tokyo-bg-secondary/90 backdrop-blur-md border-b border-tokyo-border/50">
         <div className="container-responsive h-16 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-tokyo-text-primary">Podcast Transcription Player</h1>
@@ -69,7 +69,12 @@ function AppContent() {
                 Dummy JSON
               </label>
             )}
-            <ApiKeyModalTrigger />
+            <button
+              onClick={onOpenApiKeyModal}
+              className="px-4 py-2 bg-tokyo-accent-blue/10 text-tokyo-accent-blue hover:bg-tokyo-accent-blue/20 border border-tokyo-accent-blue/30 rounded-xl transition-all font-medium text-sm"
+            >
+              API Key
+            </button>
           </div>
         </div>
       </header>
@@ -112,31 +117,24 @@ function AppContent() {
           </div>
         )}
       </main>
-    </>
+    </div>
   );
 }
 
-function ApiKeyModalTrigger() {
+function App() {
   const { setApiKey } = useApiKeyContext();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="px-4 py-2 bg-tokyo-accent-blue/10 text-tokyo-accent-blue hover:bg-tokyo-accent-blue/20 border border-tokyo-accent-blue/30 rounded-xl transition-all font-medium text-sm"
-      >
-        API Key
-      </button>
-      {isOpen && <ApiKeyModal onClose={() => setIsOpen(false)} onSave={setApiKey} />}
+      <AppContent onOpenApiKeyModal={() => setIsModalOpen(true)} />
+      {isModalOpen && <ApiKeyModal onClose={() => setIsModalOpen(false)} onSave={setApiKey} />}
     </>
   );
 }
 
-export default function App() {
-  return (
-    <ApiKeyProvider>
-      <AppContent />
-    </ApiKeyProvider>
-  );
-}
+export default () => (
+  <ApiKeyProvider>
+    <App />
+  </ApiKeyProvider>
+);

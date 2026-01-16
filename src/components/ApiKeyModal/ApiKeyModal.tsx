@@ -42,7 +42,7 @@ export function ApiKeyModal({ onClose, onSave }: ApiKeyModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-tokyo-bg-secondary/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
+      className="fixed inset-0 bg-tokyo-bg-secondary/90 backdrop-blur-sm flex items-center justify-center z-[9999] p-4"
       onClick={handleBackdropClick}
       onKeyDown={handleKeyDown}
     >
