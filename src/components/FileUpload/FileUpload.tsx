@@ -50,14 +50,14 @@ export function FileUpload({ onFileSelected, isLoading }: FileUploadProps) {
   if (isLoading) {
     return (
       <div className="w-full max-w-lg">
-        <div className="bg-[#1a1b26] border border-[#292e42] rounded-2xl p-10 text-center space-y-5">
+        <div className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl p-10 text-center space-y-5">
           <div className="relative w-16 h-16 mx-auto">
-            <div className="absolute inset-0 border-3 border-[#7aa2f7]/20 rounded-full"></div>
-            <div className="absolute inset-0 border-3 border-[#7aa2f7] rounded-full border-t-transparent animate-spin"></div>
+            <div className="absolute inset-0 border-3 border-tokyo-accent-blue/20 rounded-full"></div>
+            <div className="absolute inset-0 border-3 border-tokyo-accent-blue rounded-full border-t-transparent animate-spin"></div>
           </div>
           <div className="space-y-2">
-            <p className="text-[#c0caf5] text-lg font-medium">Transcribing audio...</p>
-            <p className="text-[#565f89] text-sm">This may take a few moments</p>
+            <p className="text-tokyo-text-primary text-lg font-medium">Transcribing audio...</p>
+            <p className="text-tokyo-text-muted text-sm">This may take a few moments</p>
           </div>
         </div>
       </div>
@@ -73,8 +73,8 @@ export function FileUpload({ onFileSelected, isLoading }: FileUploadProps) {
         onClick={handleClick}
         className={`relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 ${
           isDragging
-            ? 'border-[#7aa2f7] bg-[#7aa2f7]/5'
-            : 'border-[#292e42] bg-[#1a1b26]/50 hover:border-[#565f89] hover:bg-[#1a1b26]/80'
+            ? 'border-tokyo-accent-blue bg-tokyo-accent-blue/5'
+            : 'border-tokyo-border bg-tokyo-bg-primary/50 hover:border-tokyo-text-muted hover:bg-tokyo-bg-primary/80'
         }`}
       >
         <input
@@ -85,9 +85,9 @@ export function FileUpload({ onFileSelected, isLoading }: FileUploadProps) {
           className="hidden"
         />
         <div className="text-5xl mb-4">🎙️</div>
-        <p className="text-[#c0caf5] text-lg mb-2 font-medium">Drop your audio file here</p>
-        <p className="text-[#565f89] text-sm mb-3">or click to browse</p>
-        <p className="text-[#565f89]/60 text-xs">Supports: m4a, mp3, mp4</p>
+        <p className="text-tokyo-text-primary text-lg mb-2 font-medium">Drop your audio file here</p>
+        <p className="text-tokyo-text-muted text-sm mb-3">or click to browse</p>
+        <p className="text-tokyo-text-muted/60 text-xs">Supports: m4a, mp3, mp4</p>
       </div>
     </div>
   );

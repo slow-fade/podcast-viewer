@@ -36,26 +36,26 @@ export function ApiKeyModal({ onClose, onSave }: ApiKeyModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-[#0f0f14]/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-tokyo-bg-secondary/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-[#1a1b26] border border-[#292e42] rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+      <div className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#565f89] hover:text-[#a9b1d6] transition-colors"
+          className="absolute top-4 right-4 text-tokyo-text-muted hover:text-tokyo-text-secondary transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <h2 className="text-xl font-semibold text-[#c0caf5] mb-2">Groq API Key</h2>
-        <p className="text-[#565f89] mb-5 text-sm">
+        <h2 className="text-xl font-semibold text-tokyo-text-primary mb-2">Groq API Key</h2>
+        <p className="text-tokyo-text-muted mb-5 text-sm">
           Enter your Groq API key to transcribe audio files. Get one at{' '}
           <a
             href="https://console.groq.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[#7aa2f7] hover:underline"
+            className="text-tokyo-accent-blue hover:underline"
           >
             console.groq.com
           </a>
@@ -65,7 +65,7 @@ export function ApiKeyModal({ onClose, onSave }: ApiKeyModalProps) {
           value={inputValue}
           onChange={e => setInputValue(e.target.value)}
           placeholder="gsk_..."
-          className="w-full px-4 py-3 bg-[#16161e] border border-[#292e42] rounded-xl mb-4 text-[#c0caf5] placeholder-[#565f89] focus:outline-none focus:border-[#7aa2f7] focus:ring-1 focus:border-[#7aa2f7] transition-all"
+          className="w-full px-4 py-3 bg-tokyo-bg-secondary border border-tokyo-border rounded-xl mb-4 text-tokyo-text-primary placeholder-tokyo-text-muted focus:outline-none focus:border-tokyo-accent-blue focus:ring-1 focus:border-tokyo-accent-blue transition-all"
         />
         <div className="flex items-center gap-3 mb-5">
           <input
@@ -73,21 +73,21 @@ export function ApiKeyModal({ onClose, onSave }: ApiKeyModalProps) {
             id="showKey"
             checked={showKey}
             onChange={e => setShowKey(e.target.checked)}
-            className="w-4 h-4 rounded border-[#292e42] bg-[#16161e] text-[#7aa2f7] focus:ring-[#7aa2f7] focus:ring-offset-0"
+            className="w-4 h-4 rounded border-tokyo-border bg-tokyo-bg-secondary text-tokyo-accent-blue focus:ring-tokyo-accent-blue focus:ring-offset-0"
           />
-          <label htmlFor="showKey" className="text-sm text-[#565f89]">Show API key</label>
+          <label htmlFor="showKey" className="text-sm text-tokyo-text-muted">Show API key</label>
         </div>
         <div className="flex gap-3">
           <button
             onClick={handleClear}
-            className="flex-1 px-4 py-2.5 bg-[#f7768e]/10 text-[#f7768e] hover:bg-[#f7768e]/20 rounded-xl transition-all font-medium"
+            className="flex-1 px-4 py-2.5 bg-tokyo-accent-red/10 text-tokyo-accent-red hover:bg-tokyo-accent-red/20 rounded-xl transition-all font-medium"
           >
             Clear
           </button>
           <button
             onClick={handleSave}
             disabled={!inputValue.trim()}
-            className="flex-1 px-4 py-2.5 bg-[#7aa2f7] text-[#15161e] hover:bg-[#7aa2f7]/90 rounded-xl transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 px-4 py-2.5 bg-tokyo-accent-blue text-tokyo-bg-secondary hover:bg-tokyo-accent-blue/90 rounded-xl transition-all font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Save
           </button>

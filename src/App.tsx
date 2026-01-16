@@ -54,12 +54,12 @@ function AppContent() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0f0f14]/90 backdrop-blur-md border-b border-[#292e42]/50">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-tokyo-bg-secondary/90 backdrop-blur-md border-b border-tokyo-border/50">
         <div className="container-responsive h-16 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-[#c0caf5]">Podcast Transcription Player</h1>
+          <h1 className="text-lg font-semibold text-tokyo-text-primary">Podcast Transcription Player</h1>
           <div className="flex items-center gap-3">
             {import.meta.env.DEV && (
-              <label className="flex items-center gap-2 text-sm text-[#565f89] cursor-pointer hover:text-[#7aa2f7] transition-colors">
+              <label className="flex items-center gap-2 text-sm text-tokyo-text-muted cursor-pointer hover:text-tokyo-accent-blue transition-colors">
                 <input
                   type="checkbox"
                   checked={useDummy}
@@ -77,12 +77,12 @@ function AppContent() {
         {!transcript ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
             <div className="text-center space-y-3">
-              <h2 className="text-3xl md:text-4xl font-bold text-[#c0caf5]">Upload Your Podcast</h2>
-              <p className="text-[#565f89] text-lg">Transcribe and play with synchronized lyrics</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-tokyo-text-primary">Upload Your Podcast</h2>
+              <p className="text-tokyo-text-muted text-lg">Transcribe and play with synchronized lyrics</p>
             </div>
             <FileUpload onFileSelected={handleFileSelected} isLoading={isTranscribing} />
             {error && (
-              <div className="w-full max-w-lg bg-[#f7768e]/10 border border-[#f7768e]/30 text-[#f7768e] px-5 py-4 rounded-xl text-center text-sm">
+              <div className="w-full max-w-lg bg-tokyo-accent-red/10 border border-tokyo-accent-red/30 text-tokyo-accent-red px-5 py-4 rounded-xl text-center text-sm">
                 {error}
               </div>
             )}
@@ -92,11 +92,11 @@ function AppContent() {
             <div className="flex items-center justify-between gap-4 flex-wrap">
               <button
                 onClick={handleReset}
-                className="px-5 py-2.5 bg-[#292e42] hover:bg-[#292e42]/80 text-[#c0caf5] rounded-xl transition-all font-medium text-sm"
+                className="px-5 py-2.5 bg-tokyo-border hover:bg-tokyo-border/80 text-tokyo-text-primary rounded-xl transition-all font-medium text-sm"
               >
                 ← Upload New File
               </button>
-              <span className="text-sm text-[#565f89]">
+              <span className="text-sm text-tokyo-text-muted">
                 {transcript.words.length} words • {Math.round(transcript.duration)}s
               </span>
             </div>
@@ -124,7 +124,7 @@ function ApiKeyModalTrigger() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="px-4 py-2 bg-[#7aa2f7]/10 text-[#7aa2f7] hover:bg-[#7aa2f7]/20 border border-[#7aa2f7]/30 rounded-xl transition-all font-medium text-sm"
+        className="px-4 py-2 bg-tokyo-accent-blue/10 text-tokyo-accent-blue hover:bg-tokyo-accent-blue/20 border border-tokyo-accent-blue/30 rounded-xl transition-all font-medium text-sm"
       >
         API Key
       </button>
