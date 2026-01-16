@@ -34,15 +34,26 @@ export function ApiKeyModal({ onClose, onSave }: ApiKeyModalProps) {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
   return (
     <div
-      className="fixed inset-0 bg-tokyo-bg-secondary/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-tokyo-bg-secondary/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto"
       onClick={handleBackdropClick}
+      onKeyDown={handleKeyDown}
     >
-      <div className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl shadow-2xl w-full max-w-md p-6 relative">
+      <div
+        className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl shadow-2xl w-full max-w-md p-6 relative my-auto"
+        onClick={e => e.stopPropagation()}
+      >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-tokyo-text-muted hover:text-tokyo-text-secondary transition-colors"
+          className="absolute top-4 right-4 text-tokyo-text-muted hover:text-tokyo-text-secondary transition-colors p-1 -mr-1 -mt-1"
+          aria-label="Close"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
