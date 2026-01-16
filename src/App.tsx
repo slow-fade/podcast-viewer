@@ -54,47 +54,49 @@ function AppContent() {
 
   return (
     <>
-      <header className="flex justify-between items-center p-4 bg-gray-800/50 backdrop-blur-sm sticky top-0 z-10">
-        <h1 className="text-xl font-bold">Podcast Transcription Player</h1>
-        <div className="flex items-center gap-2">
-          {import.meta.env.DEV && (
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                checked={useDummy}
-                onChange={e => setUseDummy(e.target.checked)}
-                className="w-4 h-4"
-              />
-              Use dummy JSON
-            </label>
-          )}
-          <ApiKeyModalTrigger />
+      <header className="fixed top-0 left-0 right-0 z-40 bg-[#0f0f14]/90 backdrop-blur-md border-b border-[#292e42]/50">
+        <div className="container-responsive h-16 flex items-center justify-between">
+          <h1 className="text-lg font-semibold text-[#c0caf5]">Podcast Transcription Player</h1>
+          <div className="flex items-center gap-3">
+            {import.meta.env.DEV && (
+              <label className="flex items-center gap-2 text-sm text-[#565f89] cursor-pointer hover:text-[#7aa2f7] transition-colors">
+                <input
+                  type="checkbox"
+                  checked={useDummy}
+                  onChange={e => setUseDummy(e.target.checked)}
+                  className="w-4 h-4 rounded"
+                />
+                Dummy JSON
+              </label>
+            )}
+            <ApiKeyModalTrigger />
+          </div>
         </div>
       </header>
-      <main className="container mx-auto px-4 py-8">
+      <main className="container-responsive pt-24 pb-12 min-h-screen">
         {!transcript ? (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-2">Upload Your Podcast</h2>
-              <p className="text-gray-400">Transcribe and play with synchronized lyrics</p>
+          <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
+            <div className="text-center space-y-3">
+              <h2 className="text-3xl md:text-4xl font-bold text-[#c0caf5]">Upload Your Podcast</h2>
+              <p className="text-[#565f89] text-lg">Transcribe and play with synchronized lyrics</p>
             </div>
             <FileUpload onFileSelected={handleFileSelected} isLoading={isTranscribing} />
             {error && (
-              <div className="bg-red-500/10 border border-red-500 text-red-400 p-4 rounded-lg text-center">
+              <div className="w-full max-w-lg bg-[#f7768e]/10 border border-[#f7768e]/30 text-[#f7768e] px-5 py-4 rounded-xl text-center text-sm">
                 {error}
               </div>
             )}
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="flex justify-between items-center">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="flex items-center justify-between gap-4 flex-wrap">
               <button
                 onClick={handleReset}
-                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors"
+                className="px-5 py-2.5 bg-[#292e42] hover:bg-[#292e42]/80 text-[#c0caf5] rounded-xl transition-all font-medium text-sm"
               >
                 ← Upload New File
               </button>
-              <span className="text-sm text-gray-400">
+              <span className="text-sm text-[#565f89]">
                 {transcript.words.length} words • {Math.round(transcript.duration)}s
               </span>
             </div>
@@ -122,7 +124,7 @@ function ApiKeyModalTrigger() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+        className="px-4 py-2 bg-[#7aa2f7]/10 text-[#7aa2f7] hover:bg-[#7aa2f7]/20 border border-[#7aa2f7]/30 rounded-xl transition-all font-medium text-sm"
       >
         API Key
       </button>

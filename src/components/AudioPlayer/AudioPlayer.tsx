@@ -13,6 +13,7 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
   const progressRef = useRef<HTMLDivElement>(null);
 
   const formatTime = (seconds: number): string => {
+    if (!seconds || isNaN(seconds)) return '0:00';
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -28,19 +29,19 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="bg-gray-800 rounded-xl p-4">
-      <div className="flex items-center gap-4">
+    <div className="bg-[#1a1b26] border border-[#292e42] rounded-2xl p-5">
+      <div className="flex items-center gap-5">
         <button
           onClick={onToggle}
-          className="w-12 h-12 flex items-center justify-center bg-blue-600 hover:bg-blue-700 rounded-full transition-colors flex-shrink-0"
+          className="w-12 h-12 flex items-center justify-center bg-[#7aa2f7] text-[#15161e] hover:bg-[#7aa2f7]/90 rounded-full transition-all flex-shrink-0 shadow-lg shadow-[#7aa2f7]/20"
         >
           {isPlaying ? (
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <rect x="6" y="4" width="4" height="16" />
-              <rect x="14" y="4" width="4" height="16" />
+              <rect x="6" y="4" width="4" height="16" rx="1" />
+              <rect x="14" y="4" width="4" height="16" rx="1" />
             </svg>
           ) : (
-            <svg className="w-5 h-5 ml-1" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
@@ -49,14 +50,16 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
           <div
             ref={progressRef}
             onClick={handleProgressClick}
-            className="h-2 bg-gray-600 rounded-full cursor-pointer overflow-hidden"
+            className="h-2 bg-[#292e42] rounded-full cursor-pointer overflow-hidden group"
           >
             <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-75"
+              className="h-full bg-[#7aa2f7] rounded-full transition-all duration-75 relative"
               style={{ width: `${progress}%` }}
-            />
+            >
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-[#7aa2f7] rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"></div>
+            </div>
           </div>
-          <div className="flex justify-between text-xs text-gray-400 mt-1">
+          <div className="flex justify-between text-xs text-[#565f89] mt-2 font-mono">
             <span>{formatTime(currentTime)}</span>
             <span>{formatTime(duration)}</span>
           </div>

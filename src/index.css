@@ -1,31 +1,96 @@
 @import "tailwindcss";
 
+@theme {
+  --color-bg-primary: #1a1b26;
+  --color-bg-secondary: #16161e;
+  --color-bg-tertiary: #1f2335;
+  --color-bg-hover: #292e42;
+
+  --color-text-primary: #c0caf5;
+  --color-text-secondary: #a9b1d6;
+  --color-text-muted: #565f89;
+
+  --color-accent-blue: #7aa2f7;
+  --color-accent-purple: #bb9af7;
+  --color-accent-red: #f7768e;
+  --color-accent-orange: #ff9e64;
+  --color-accent-green: #9ece6a;
+  --color-accent-cyan: #7dcfff;
+  --color-accent-yellow: #e0af68;
+
+  --color-border: #292e42;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  background: linear-gradient(to bottom, #111827, #1f2937);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0f0f14 0%, #1a1b26 50%, #1f2335 100%);
+  background-attachment: fixed;
   min-height: 100vh;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+}
+
+.container-responsive {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: 1280px;
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .container-responsive {
+    max-width: 1600px;
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 2560px) {
+  .container-responsive {
+    max-width: 2048px;
+    padding: 0 2.5rem;
+  }
 }
 
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(55, 65, 81, 0.5);
+  background: rgba(25, 27, 38, 0.5);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(75, 85, 99, 0.8);
+  background: rgba(86, 95, 137, 0.6);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(107, 114, 128, 0.8);
+  background: rgba(86, 95, 137, 0.8);
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--color-accent-blue);
 }

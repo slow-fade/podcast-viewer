@@ -26,9 +26,9 @@ export function TranscriptView({ lines, activeLineIndex }: TranscriptViewProps) 
   return (
     <div
       ref={containerRef}
-      className="bg-gray-800 rounded-xl p-6 max-w-2xl mx-auto h-96 overflow-y-auto scroll-smooth"
+      className="bg-[#1a1b26] border border-[#292e42] rounded-2xl p-6 max-w-3xl mx-auto h-80 overflow-y-auto scroll-smooth"
     >
-      <div className="space-y-4">
+      <div className="space-y-3">
         {lines.map((line, index) => {
           const isActive = index === activeLineIndex;
           return (
@@ -37,10 +37,10 @@ export function TranscriptView({ lines, activeLineIndex }: TranscriptViewProps) 
               ref={el => {
                 lineRefs.current[index] = el;
               }}
-              className={`transition-all duration-300 p-3 rounded-lg ${
+              className={`transition-all duration-300 px-4 py-3 rounded-xl text-center ${
                 isActive
-                  ? 'bg-blue-600 text-white scale-105 shadow-lg'
-                  : 'bg-gray-700/50 text-gray-400 hover:bg-gray-700'
+                  ? 'bg-[#7aa2f7]/15 text-[#c0caf5] scale-[1.02] border border-[#7aa2f7]/30 shadow-lg shadow-[#7aa2f7]/10'
+                  : 'bg-transparent text-[#565f89] hover:bg-[#292e42]/30'
               }`}
             >
               {line.text}
