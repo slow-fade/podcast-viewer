@@ -26,11 +26,32 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
     onSeek(percent * duration);
   };
 
+  const handleSeekBack = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 5);
+    }
+  };
+
+  const handleSeekForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(duration, audioRef.current.currentTime + 5);
+    }
+  };
+
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
     <div className="bg-tokyo-bg-primary border border-tokyo-border rounded-2xl p-5">
       <div className="flex items-center gap-5">
+        <button
+          onClick={handleSeekBack}
+          className="w-10 h-10 flex items-center justify-center text-tokyo-text-muted hover:text-tokyo-accent-blue hover:bg-tokyo-bg-secondary/50 rounded-full transition-all flex-shrink-0"
+          title="Seek back 5 seconds"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" />
+          </svg>
+        </button>
         <button
           onClick={onToggle}
           className="w-12 h-12 flex items-center justify-center bg-tokyo-accent-blue text-tokyo-bg-secondary hover:bg-tokyo-accent-blue/90 rounded-full transition-all flex-shrink-0 shadow-lg shadow-tokyo-accent-blue/20"
@@ -45,6 +66,15 @@ export function AudioPlayer({ audioRef, isPlaying, currentTime, duration, onTogg
               <path d="M8 5v14l11-7z" />
             </svg>
           )}
+        </button>
+        <button
+          onClick={handleSeekForward}
+          className="w-10 h-10 flex items-center justify-center text-tokyo-text-muted hover:text-tokyo-accent-blue hover:bg-tokyo-bg-secondary/50 rounded-full transition-all flex-shrink-0"
+          title="Seek forward 5 seconds"
+        >
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+          </svg>
         </button>
         <div className="flex-1 min-w-0">
           <div
