@@ -1,16 +1,30 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { ApiKeyModal } from '@/components/ApiKeyModal';
 import { FileUpload } from '@/components/FileUpload';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { TranscriptView } from '@/components/TranscriptView';
 import { LanguageSelector } from '@/components/LanguageSelector';
+import { HistoryButton } from '@/components/HistoryButton';
+import { HistoryModal } from '@/components/HistoryModal';
 import { ApiKeyProvider, useApiKeyContext } from '@/context';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { useTranscript } from '@/hooks/useTranscript';
 import { transcribeAudio } from '@/services/groq';
+import {
+  hashFile,
+  saveAudioFile,
+  updateAudioFileDuration,
+  getStoredTranscriptionWithAudio,
+  getAllAudioFiles,
+  getTranscription,
+  deleteAudioFile,
+  deleteTranscription,
+  hasTranscription,
+  saveTranscription,
+} from '@/services/storage';
 import { splitTranscriptIntoLines } from '@/utils';
 import dummyTranscript from '@/services/dummy-transcript.json';
-import type { TranscriptLine, GroqTranscriptResponse } from '@/types';
+import type { TranscriptLine, GroqTranscriptResponse, StoredAudioFile, StoredTranscription } from '@/types';
 
 function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
   const { audioRef, isPlaying, currentTime, duration, loadAudio, toggle, seek } = useAudioPlayer();
@@ -21,13 +35,61 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
   const [useDummy, setUseDummy] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState('tr');
 
+  const [historyModalOpen, setHistoryModalOpen] = useState(false);
+  const [historyItems, setHistoryItems] = useState<StoredAudioFile[]>([]);
+  const [historyTranscriptions, setHistoryTranscriptions] = useState<Map<string, StoredTranscription>>(new Map());
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  const currentHashRef = useRef<string | null>(null);
   const { activeLineIndex } = useTranscript(currentTime, lines);
+
+  const loadHistoryItems = useCallback(async () => {
+    setIsLoadingHistory(true);
+    try {
+      const items = await getAllAudioFiles();
+      setHistoryItems(items);
+
+      const transcriptionsMap = new Map<string, StoredTranscription>();
+      for (const item of items) {
+        const transcription = await getTranscription(item.hash);
+        if (transcription) {
+          transcriptionsMap.set(item.hash, transcription);
+        }
+      }
+      setHistoryTranscriptions(transcriptionsMap);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadHistoryItems();
+  }, [loadHistoryItems]);
 
   const handleFileSelected = useCallback(async (file: File) => {
     setIsTranscribing(true);
     setError(null);
 
     try {
+      const fileHash = await hashFile(file);
+      currentHashRef.current = fileHash;
+
+      const existingTranscription = await hasTranscription(fileHash);
+
+      if (existingTranscription) {
+        const stored = await getStoredTranscriptionWithAudio(fileHash);
+        if (stored) {
+          const audioUrl = URL.createObjectURL(stored.file);
+          loadAudio(audioUrl);
+          setTranscript(stored.transcription.groqResponse);
+          updateAudioFileDuration(fileHash, stored.transcription.groqResponse.duration);
+          const parsedLines = splitTranscriptIntoLines(stored.transcription.groqResponse.words);
+          setLines(parsedLines);
+          await loadHistoryItems();
+          return;
+        }
+      }
+
       const audioUrl = URL.createObjectURL(file);
       loadAudio(audioUrl);
 
@@ -37,21 +99,67 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
       } else {
         result = await transcribeAudio(file, selectedLanguage);
       }
-      setTranscript(result);
 
-      const parsedLines = splitTranscriptIntoLines(result.words);
-      setLines(parsedLines);
+      const savedFileMeta = await saveAudioFile(file);
+      await saveTranscription(savedFileMeta.hash, selectedLanguage, result);
+
+      if (currentHashRef.current === fileHash) {
+        setTranscript(result);
+        const parsedLines = splitTranscriptIntoLines(result.words);
+        setLines(parsedLines);
+      }
+
+      await loadHistoryItems();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Transcription failed');
     } finally {
       setIsTranscribing(false);
     }
-  }, [loadAudio, useDummy, selectedLanguage]);
+  }, [loadAudio, useDummy, selectedLanguage, loadHistoryItems]);
+
+  const handleSelectHistoryItem = useCallback(async (hash: string) => {
+    setHistoryModalOpen(false);
+    setIsTranscribing(true);
+    setError(null);
+
+    try {
+      const stored = await getStoredTranscriptionWithAudio(hash);
+      if (!stored) {
+        setError('File not found in storage');
+        return;
+      }
+
+      currentHashRef.current = hash;
+      const audioUrl = URL.createObjectURL(stored.file);
+      loadAudio(audioUrl);
+      setTranscript(stored.transcription.groqResponse);
+      const parsedLines = splitTranscriptIntoLines(stored.transcription.groqResponse.words);
+      setLines(parsedLines);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load transcription');
+    } finally {
+      setIsTranscribing(false);
+    }
+  }, [loadAudio]);
+
+  const handleDeleteHistoryItem = useCallback(async (hash: string) => {
+    await deleteTranscription(hash);
+    await deleteAudioFile(hash);
+
+    if (currentHashRef.current === hash) {
+      setTranscript(null);
+      setLines([]);
+      currentHashRef.current = null;
+    }
+
+    await loadHistoryItems();
+  }, [loadHistoryItems]);
 
   const handleReset = useCallback(() => {
     setTranscript(null);
     setLines([]);
     setError(null);
+    currentHashRef.current = null;
   }, []);
 
   return (
@@ -60,6 +168,10 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
         <div className="container-responsive h-16 flex items-center justify-between">
           <h1 className="text-lg font-semibold text-tokyo-text-primary">Podcast Transcription Player</h1>
           <div className="flex items-center gap-3">
+            <HistoryButton
+              onClick={() => setHistoryModalOpen(true)}
+              itemCount={historyItems.length}
+            />
             {import.meta.env.DEV && (
               <label className="flex items-center gap-2 text-sm text-tokyo-text-muted cursor-pointer hover:text-tokyo-accent-blue transition-colors">
                 <input
@@ -124,6 +236,16 @@ function AppContent({ onOpenApiKeyModal }: { onOpenApiKeyModal: () => void }) {
           </div>
         )}
       </main>
+
+      <HistoryModal
+        isOpen={historyModalOpen}
+        onClose={() => setHistoryModalOpen(false)}
+        onSelectItem={handleSelectHistoryItem}
+        onDeleteItem={handleDeleteHistoryItem}
+        items={historyItems}
+        transcriptions={historyTranscriptions}
+        isLoading={isLoadingHistory}
+      />
     </div>
   );
 }

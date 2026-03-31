@@ -22,3 +22,19 @@ export interface GroqTranscriptResponse {
     id: string;
   };
 }
+
+export interface StoredAudioFile {
+  hash: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  duration: number;
+  createdAt: number;
+}
+
+export interface StoredTranscription {
+  hash: string;
+  language: string;
+  groqResponse: GroqTranscriptResponse;
+  createdAt: number;
+}
